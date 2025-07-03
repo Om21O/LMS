@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
     mobile = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
-        return self.username
+        return self.username 
 
 class EmployeeMaster(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.DO_NOTHING, related_name='employee_profile')
