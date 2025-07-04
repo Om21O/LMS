@@ -1,18 +1,5 @@
 from django.urls import path
-from .views import (
-    TrainingMaterialCreateView,
-    TrainingMaterialListView,
-    TrainingMaterialUpdateView,
-    TrainingMaterialSoftDeleteView,
-    AssignTrainingView,
-    MyMaterialsView,
-    StartTrainingView,
-    EndTrainingView,
-    TrainingAssignmentUpdateView,         
-    TrainingAssignmentSoftDeleteView,     
-    TrainingLogUpdateView,                
-    TrainingLogSoftDeleteView 
-)
+from .views import *
 
 urlpatterns = [
     path('materials/create/', TrainingMaterialCreateView.as_view()),

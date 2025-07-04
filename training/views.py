@@ -7,8 +7,11 @@ from accounts.models import EmployeeMaster
 from .serializers import TrainingMaterialSerializer, TrainingAssignmentSerializer, TrainingLogSerializer
 from django.utils import timezone
 from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
+from accounts.permissions import IsAdminUserCustom, IsSelfOrAdmin
 
 class TrainingMaterialCreateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def post(self, request):
         data = request.data
         serializer = TrainingMaterialSerializer(data=data)
@@ -19,12 +22,14 @@ class TrainingMaterialCreateView(APIView):
 
 #list
 class TrainingMaterialListView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def get(self, request):
         materials = TrainingMaterial.objects.all()
         serializer = TrainingMaterialSerializer(materials, many=True)
         return Response(serializer.data, status=200)
 
 class AssignTrainingView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     @transaction.atomic
     def post(self, request):
         employee_id = request.data.get('employee_id')
@@ -57,6 +62,7 @@ class AssignTrainingView(APIView):
 
 
 class TrainingMaterialUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def put(self, request, material_id):
         try:
             material = TrainingMaterial.objects.get(id=material_id)
@@ -70,6 +76,7 @@ class TrainingMaterialUpdateView(APIView):
         return Response(serializer.errors, status=400)
     
 class TrainingMaterialSoftDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def delete(self, request, material_id):
         try:
             material = TrainingMaterial.objects.get(id=material_id)
@@ -81,6 +88,7 @@ class TrainingMaterialSoftDeleteView(APIView):
 
 
 class MyMaterialsView(APIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
     def get(self, request, employee_id):
         try:
             employee = EmployeeMaster.objects.get(id=employee_id)
@@ -100,6 +108,7 @@ class MyMaterialsView(APIView):
 
 
 class StartTrainingView(APIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
     def post(self, request):
         employee_id = request.data.get('employee_id')
         material_id = request.data.get('material_id')
@@ -123,6 +132,7 @@ class StartTrainingView(APIView):
 
 
 class EndTrainingView(APIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
     def post(self, request):
         employee_id = request.data.get('employee_id')
         material_id = request.data.get('material_id')
@@ -153,6 +163,7 @@ class EndTrainingView(APIView):
             return Response({"error": str(e)}, status=400)
 
 class TrainingAssignmentUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def put(self, request, assignment_id):
         try:
             assignment = TrainingAssignment.objects.get(id=assignment_id)
@@ -166,6 +177,7 @@ class TrainingAssignmentUpdateView(APIView):
         return Response(serializer.errors, status=400)
 
 class TrainingAssignmentSoftDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def delete(self, request, assignment_id):
         try:
             assignment = TrainingAssignment.objects.get(id=assignment_id)
@@ -177,6 +189,7 @@ class TrainingAssignmentSoftDeleteView(APIView):
 
 
 class TrainingLogUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def put(self, request, log_id):
         try:
             log = TrainingLog.objects.get(id=log_id)
@@ -191,6 +204,7 @@ class TrainingLogUpdateView(APIView):
 
 
 class TrainingLogSoftDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def delete(self, request, log_id):
         try:
             log = TrainingLog.objects.get(id=log_id)
