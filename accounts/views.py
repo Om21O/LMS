@@ -1,15 +1,65 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,permissions
 from django.contrib.auth.hashers import make_password
 from .models import *
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminUserCustom, IsSelfOrAdmin
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
+
+
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            try:
+                role = user.role_connector  # fetch UserRoleConnector
+                is_admin = role.is_admin
+                is_employee = role.is_employee
+                if is_admin:
+                    user_role = "admin"
+                elif is_employee:
+                    user_role = "employee"
+                else:
+                    user_role = "unknown"
+            except UserRoleConnector.DoesNotExist:
+                return Response({"error": "User role not configured", "status": 400})
+
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "username": user.username,
+                "user_role": user_role,
+            })
+        else:
+            return Response({"error": "Invalid credentials", "status": 400})
+
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"msg": "Logout successful", "status": 200})
+        except KeyError:
+            return Response({"error": "Refresh token is required",  "status": 400})
+        except TokenError as e:
+            return Response({"error": str(e), "status": 400})
 
 
 #                                          # Admin Views
-# Create Admin
+# Create Admin 
 
 
 class CreateAdminView(APIView):

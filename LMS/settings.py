@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles','training',
-    'accounts',  # Custom app for user accounts
+    'accounts', 'rest_framework_simplejwt.token_blacklist',
+     # Custom app for user accounts
 ]
 
 MIDDLEWARE = [
