@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,permissions
 from django.contrib.auth.hashers import make_password
-from .models import *
+from .models import EmployeeMaster,EmployeeProfile
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminUserCustom, IsSelfOrAdmin
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -44,7 +44,7 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         try:
@@ -67,34 +67,39 @@ class CreateAdminView(APIView):
 
     def post(self, request):
         data = request.data
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check for duplicates
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "Username already exists"}, status=400)
+
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "Email already exists"}, status=400)
+
         try:
-            
-            user =User.objects.create(
-                username=data['username'],
-                email=data['email'],
-                mobile=data['mobile'],
-                password=make_password(data['password']),
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
             )
 
-           
-            user_profile = UserProfile.objects.create(
+            user_profile = EmployeeProfile.objects.create(
                 user=user,
-                is_admin = True,
+                is_admin=True
             )
 
             return Response({
                 "msg": "Admin created successfully",
                 "user_id": user.id,
-                "admin_profile_id": user_profile.id,
-                "status": 201
-            })
+                "admin_profile_id": user_profile.id
+            }, status=201)
 
         except Exception as e:
             return Response({
-                "error": str(e),
-                "status": 400
-            })
-
+                "error": str(e)
+            }, status=400)
 # Get Admin Details
 class GetAdminView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUserCustom]
@@ -153,7 +158,7 @@ class GetSpecificAdminView(APIView):
             return Response({"error": "Admin not found", "status":404})
 #                                        EMPLOYEE VIEWS
 class CreateEmployeeView(APIView):
-   # permission_classes = [IsAuthenticated, IsAdminUserCustom]
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def post(self, request):
         data = request.data
         try:
@@ -192,7 +197,7 @@ class CreateEmployeeView(APIView):
             return Response({"error": str(e)}, status=400)
 
 class GetEmployeeView(APIView):
-   # permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
     def get(self, request, pk):
         try:
@@ -216,7 +221,7 @@ class GetEmployeeView(APIView):
 
 
 class UpdateEmployeeView(APIView):
-   # permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
     def put(self, request, pk):
         try:
@@ -240,7 +245,7 @@ class UpdateEmployeeView(APIView):
 
 
 class DeleteEmployeeView(APIView):
-   # permission_classes = [IsAuthenticated, IsAdminUserCustom]
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
 
     def delete(self, request, pk):
         try:
@@ -253,7 +258,7 @@ class DeleteEmployeeView(APIView):
 
 
 class GetSpecificEmployeeView(APIView):
-   # permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
     def get(self, request, pk):
         try:
