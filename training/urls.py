@@ -7,7 +7,7 @@ urlpatterns = [
     path('materials/update/<int:material_id>/', TrainingMaterialUpdateView.as_view()),
     path('materials/soft-delete/<int:material_id>/', TrainingMaterialSoftDeleteView.as_view()),
     path('assign/', AssignTrainingView.as_view()),
-    path('mymaterials/<int:employee_id>/', MyMaterialsView.as_view()),
+    path('mymaterials/<int:employee_profile_id>/', MyMaterialsView.as_view()),
     path('start/', StartTrainingView.as_view()),
     path('end/', EndTrainingView.as_view()),
      path('assignment/update/<int:assignment_id>/', TrainingAssignmentUpdateView.as_view()),

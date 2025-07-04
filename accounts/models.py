@@ -17,6 +17,9 @@ class EmployeeMaster(models.Model):
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
 
+    class Meta:
+        db_table="accounts_employeemaster"
+
     def __str__(self):
         return self.emp_name
 
@@ -25,5 +28,8 @@ class EmployeeProfile(models.Model):
     is_admin = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
 
+    class Meta:
+        db_table="accounts_employeeprofile"
+    
     def __str__(self):
         return self.user.username

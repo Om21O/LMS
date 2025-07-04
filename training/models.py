@@ -17,6 +17,9 @@ class TrainingMaterial(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        db_table="training_trainingmaterial"
+
     def __str__(self):
         return self.title
 
@@ -33,6 +36,7 @@ class TrainingAssignment(models.Model):
 
     class Meta:
         unique_together = ('employee', 'material')
+        db_table="training_trainingassignment"
 
     def __str__(self):
         return f'{self.employee.emp_name} - {self.material.title}'
@@ -52,6 +56,9 @@ class TrainingLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        db_table="training_traininglog"
+
     def __str__(self):
         return f'{self.employee.emp_name} - {self.material.title} - {self.status}'
 
@@ -62,6 +69,9 @@ class TrainingSession(models.Model):
     )
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table="training_trainingsession"
 
     def __str__(self):
         return f'{self.employee.emp_name} session on {self.started_at.date()}'
