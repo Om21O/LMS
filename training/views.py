@@ -139,7 +139,7 @@ class StartTrainingView(APIView):
 
 
 class EndTrainingView(APIView):
-    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    permission_classes = [IsAuthenticated, IsS  elfOrAdmin]
 
     def post(self, request):
         employee_id = request.data.get('employee_profile_id')
