@@ -12,6 +12,7 @@ from .views import (
     LogoutView,
     GetSpecificAdminView,
     GetSpecificEmployeeView,
+    GetAllEmployeesView,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -30,4 +31,5 @@ urlpatterns = [
     path('employee/view/<int:pk>/', GetSpecificEmployeeView.as_view()),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('employee/details/', GetAllEmployeesView.as_view(), name='employee_details'),
 ]

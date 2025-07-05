@@ -16,7 +16,7 @@ class LoginView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate( username=username, password=password)
 
         if user is not None:
             try:
@@ -29,7 +29,7 @@ class LoginView(APIView):
                     user_role = "employee"
                 else:
                     user_role = "unknown"
-            except UserRoleConnector.DoesNotExist:
+            except Exception as e:
                 return Response({"error": "User role not configured", "status": 400})
 
             refresh = RefreshToken.for_user(user)
@@ -133,7 +133,7 @@ class DeleteAdminView(APIView):
 
     def delete(self, request, pk):
         try:
-            admin_user = CustomUser.objects.get(pk=pk, is_admin=True)
+            admin_user = User.objects.get(pk=pk, is_admin=True)
             if request.user.id == admin_user.id:
                 return Response({"error": "You can't delete yourself", "status":200})
             admin_user.is_active = False
@@ -218,7 +218,37 @@ class GetEmployeeView(APIView):
             })
         except EmployeeMaster.DoesNotExist:
             return Response({"error": "Employee not found", "status": 404})
+class GetAllEmployeesView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserCustom]
 
+    def get(self, request):
+        try:
+            employees = EmployeeProfile.objects.filter(is_employee=True).select_related('user')
+            result = []
+
+            for emp_profile in employees:
+                try:
+                    master = EmployeeMaster.objects.get(user=emp_profile.user)
+                    result.append({
+                        "user_id": emp_profile.user.id,
+                        "username": emp_profile.user.username,
+                        "email": emp_profile.user.email,
+                        "emp_name": master.emp_name,
+                        "designation": master.designation,
+                        "department": master.department,
+                        "branch": master.branch,
+                        "mobile": master.mobile,
+                        "address": master.address,
+                        "city": master.city,
+                        "country": master.country,
+                    })
+                except EmployeeMaster.DoesNotExist:
+                    continue  # skip if the master data is missing
+
+            return Response({"employees": result,"Status":200})
+
+        except Exception as e:
+            return Response({"error": str(e),"Status":400})
 
 class UpdateEmployeeView(APIView):
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
@@ -279,3 +309,4 @@ class GetSpecificEmployeeView(APIView):
             })
         except EmployeeMaster.DoesNotExist:
             return Response({"error": "Employee not found", "status": 404})
+
