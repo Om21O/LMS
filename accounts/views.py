@@ -111,7 +111,8 @@ class GetAdminView(APIView):
             "username": admin.username,
             "email": admin.email,
             "mobile": admin.mobile
-        },{"status":200} )
+            ,"status":200
+        } )
 
 # Update Admin
 class UpdateAdminView(APIView):
