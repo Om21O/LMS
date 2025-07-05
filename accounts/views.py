@@ -109,8 +109,8 @@ class GetAdminView(APIView):
         return Response({
             "id": admin.id,
             "username": admin.username,
-            "email": admin.email,
-            "mobile": admin.mobile
+            "email": admin.email
+            
             ,"status":200
         } )
 
@@ -122,7 +122,7 @@ class UpdateAdminView(APIView):
         admin = request.user
         admin.username = request.data.get("username", admin.username)
         admin.email = request.data.get("email", admin.email)
-        admin.mobile = request.data.get("mobile", admin.mobile)
+       # admin.mobile = request.data.get("mobile", admin.mobile)
         if request.data.get("password"):
             admin.password = make_password(request.data["password"])
         admin.save()
@@ -148,15 +148,19 @@ class GetSpecificAdminView(APIView):
 
     def get(self, request, pk):
         try:
-            admin_user = User.objects.get(pk=pk, is_admin=True)
+            user = User.objects.get(pk=pk)
+            if not hasattr(user, "role_connector") or not user.role_connector.is_admin:
+                return Response({"error": "User is not an admin", "status": 403})
+
             return Response({
-                "id": admin_user.id,
-                "username": admin_user.username,
-                "email": admin_user.email,
-                "mobile": admin_user.mobile, "status":200
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "status": 200
             })
+
         except User.DoesNotExist:
-            return Response({"error": "Admin not found", "status":404})
+            return Response({"error": "Admin not found", "status": 404})
 #                                        EMPLOYEE VIEWS
 class CreateEmployeeView(APIView):
     # permission_classes = [IsAuthenticated, IsAdminUserCustom]
