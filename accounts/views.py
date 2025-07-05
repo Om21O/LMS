@@ -54,7 +54,7 @@ class LogoutView(APIView):
             return Response({"msg": "Logout successful", "status": 200})
         except KeyError:
             return Response({"error": "Refresh token is required",  "status": 400})
-        except TokenError as e:
+        except Exception as e:
             return Response({"error": str(e), "status": 400})
 
 
@@ -63,7 +63,7 @@ class LogoutView(APIView):
 
 
 class CreateAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminUserCustom]
+    #permission_classes = [IsAuthenticated, IsAdminUserCustom]
 
     def post(self, request):
         data = request.data
@@ -139,7 +139,7 @@ class DeleteAdminView(APIView):
             admin_user.is_active = False
             admin_user.save()
             return Response({"msg": "Admin deleted" ,"status":200})
-        except CustomUser.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"error": "Admin not found ", "status":404})
 
 class GetSpecificAdminView(APIView):
@@ -147,18 +147,18 @@ class GetSpecificAdminView(APIView):
 
     def get(self, request, pk):
         try:
-            admin_user = CustomUser.objects.get(pk=pk, is_admin=True)
+            admin_user = User.objects.get(pk=pk, is_admin=True)
             return Response({
                 "id": admin_user.id,
                 "username": admin_user.username,
                 "email": admin_user.email,
                 "mobile": admin_user.mobile, "status":200
             })
-        except CustomUser.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"error": "Admin not found", "status":404})
 #                                        EMPLOYEE VIEWS
 class CreateEmployeeView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminUserCustom]
+    # permission_classes = [IsAuthenticated, IsAdminUserCustom]
     def post(self, request):
         data = request.data
         try:
