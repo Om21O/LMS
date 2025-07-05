@@ -1,19 +1,5 @@
 from django.urls import path
-from .views import (
-    CreateAdminView,
-    CreateEmployeeView,
-    GetAdminView,
-    UpdateAdminView,
-    DeleteAdminView,
-    GetEmployeeView,
-    UpdateEmployeeView,
-    DeleteEmployeeView,
-    LoginView,
-    LogoutView,
-    GetSpecificAdminView,
-    GetSpecificEmployeeView,
-    GetAllEmployeesView,
-)
+from .views import *
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [

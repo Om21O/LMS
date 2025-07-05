@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import EmployeeMaster  # adjust import if app name differs
+from accounts.models import *  
 
 
 class TrainingMaterial(models.Model):

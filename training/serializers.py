@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TrainingMaterial, TrainingAssignment, TrainingLog
+from .models import *
 
 
 class TrainingMaterialSerializer(serializers.ModelSerializer):

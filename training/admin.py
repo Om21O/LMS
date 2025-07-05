@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TrainingMaterial, TrainingAssignment, TrainingLog
+from .models import *
 
 
 class TrainingMaterialAdmin(admin.ModelAdmin):

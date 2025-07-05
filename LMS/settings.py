@@ -24,7 +24,7 @@ environ.Env.read_env()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-SECRET_KEY = env('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,8 +87,7 @@ WSGI_APPLICATION = 'LMS.wsgi.application'
 # }
 DATABASES = {
     'default': env.db(),
-    }
-    'default': env.db(),
+   
     }
 
 

@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.utils import timezone
-from .models import TrainingMaterial, TrainingAssignment, TrainingLog
-from accounts.models import EmployeeMaster
-from .serializers import TrainingMaterialSerializer, TrainingAssignmentSerializer, TrainingLogSerializer
+from .models import *
+from accounts.models import *
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from accounts.permissions import IsAdminUserCustom, IsSelfOrAdmin
 
@@ -139,7 +139,7 @@ class StartTrainingView(APIView):
 
 
 class EndTrainingView(APIView):
-    permission_classes = [IsAuthenticated, IsS  elfOrAdmin]
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
     def post(self, request):
         employee_id = request.data.get('employee_profile_id')
