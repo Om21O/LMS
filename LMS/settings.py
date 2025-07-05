@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['40.81.241.147', 'localhost','127.0.0.1', ]
+ALLOWED_HOSTS = ['40.81.241.147', 'localhost','127.0.0.1','lmspoc.esarwa.com' ]
 #UTH_USER_MODEL = 'accounts.User'
 
 
