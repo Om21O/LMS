@@ -208,10 +208,12 @@ class MyMaterialsView(APIView):
                 "material_id": assign.material.id,
                 "title": assign.material.title,
                 "media_type": assign.material.media_type,
-                "media": assign.material.media.url if assign.material.media else None,
+                "media": assign.material.media if assign.material.media else None,
                 "is_completed": assign.is_completed
             } for assign in assignments]
 
             return Response({"data": data, "status": 200})
         except EmployeeMaster.DoesNotExist:
             return Response({"error": "Invalid employee ID", "status": 404})
+        except Exception as e:
+            return Response({"error": str(e), "status": 500})

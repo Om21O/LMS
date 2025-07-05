@@ -20,8 +20,6 @@ class EmployeeMaster(models.Model):
     class Meta:
         db_table="accounts_employeemaster"
 
-    class Meta:
-        db_table = 'accounts_employeemaster'
 
     def __str__(self):
         return self.emp_name
@@ -32,8 +30,7 @@ class EmployeeProfile(models.Model):
     is_employee = models.BooleanField(default=False)
     class Meta:
         db_table="accounts_employeeprofile"
-    class Meta:
-        db_table="accounts_employeeprofile"
+
     
     def __str__(self):
         return self.user.username
