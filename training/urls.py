@@ -14,4 +14,7 @@ urlpatterns = [
     path('assignment/soft-delete/<int:assignment_id>/', TrainingAssignmentSoftDeleteView.as_view()),
     path('log/update/<int:log_id>/', TrainingLogUpdateView.as_view()),
     path('log/soft-delete/<int:log_id>/', TrainingLogSoftDeleteView.as_view()),
+    path('training/session/start/', StartTrainingSessionView.as_view(), name='start-training-session'),
+    path('training/session/end/', EndTrainingSessionView.as_view(), name='end-training-session'),
+
 ]

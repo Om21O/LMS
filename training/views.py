@@ -217,3 +217,45 @@ class MyMaterialsView(APIView):
             return Response({"error": "Invalid employee ID", "status": 404})
         except Exception as e:
             return Response({"error": str(e), "status": 500})
+        
+
+
+# ------------------------- Training Log Views -------------------------
+
+class StartTrainingSessionView(APIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+
+    def post(self, request):
+        employee_id = request.data.get("employee_profile_id")
+        try:
+            employee = EmployeeMaster.objects.get(id=employee_id)
+
+            TrainingSession.objects.create(
+                employee=employee,
+                started_at=timezone.now()
+            )
+
+            return Response({"msg": "Training session started", "status": 201})
+        except EmployeeMaster.DoesNotExist:
+            return Response({"error": "Invalid employee ID", "status": 404})
+
+
+class EndTrainingSessionView(APIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+
+    def post(self, request):
+        employee_id = request.data.get("employee_profile_id")
+        try:
+            session = TrainingSession.objects.filter(
+                employee_id=employee_id,
+                ended_at__isnull=True
+            ).latest("started_at")
+
+            session.ended_at = timezone.now()
+            session.save()
+
+            return Response({"msg": "Training session ended", "status": 200})
+        except TrainingSession.DoesNotExist:
+            return Response({"error": "No active session found", "status": 404})
+
+
