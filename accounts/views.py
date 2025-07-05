@@ -196,28 +196,7 @@ class CreateEmployeeView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=400)
 
-class GetEmployeeView(APIView):
-    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-    def get(self, request, pk):
-        try:
-            emp = EmployeeMaster.objects.get(pk=pk)
-            self.check_object_permissions(request, emp)
-            return Response({
-                "id": emp.id,
-                "name": emp.emp_name,
-                "email": emp.email,
-                "designation": emp.designation,
-                "department": emp.department,
-                "branch": emp.branch,
-                "mobile": emp.mobile,
-                "address": emp.address,
-                "city": emp.city,
-                "country": emp.country,
-                "status": 200
-            })
-        except EmployeeMaster.DoesNotExist:
-            return Response({"error": "Employee not found", "status": 404})
 class GetAllEmployeesView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUserCustom]
 

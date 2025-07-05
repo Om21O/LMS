@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/details/', GetAdminView.as_view()),
     path('admin/update/', UpdateAdminView.as_view()),
     path('admin/delete/<str:pk>/', DeleteAdminView.as_view()),
-    path('employee/<int:pk>/', GetEmployeeView.as_view()),
     path('employee/update/<int:pk>/', UpdateEmployeeView.as_view()),
     path('employee/delete/<int:pk>/', DeleteEmployeeView.as_view()),
     path('admin/view/<int:pk>/', GetSpecificAdminView.as_view()),
